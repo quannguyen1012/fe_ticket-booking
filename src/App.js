@@ -19,7 +19,6 @@ function App() {
         <Route path='/invoice' element={<Invoice/>}></Route>
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/signup' element={<SignUp/>}></Route>
-
       </Routes>
     </BrowserRouter>
   );

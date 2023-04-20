@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import background from "../img/backgound.jpg";
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import logo from "../img/ve-may-bay-gia-re.jpg";
 import Navbar from "./NavBar";
@@ -10,6 +10,17 @@ const { Header} = Layout;
 
 
 function Flight() {
+ 
+  const [flights , setFlights] = useState([]);
+
+  const loadFlight = async (value) => {
+    setFlights(value);
+  }
+
+  useEffect(() => {
+    loadFlight();
+}, []);
+  console.log(flights);
 
   const handleSubmit = () => {
     window.location.href = "/info";
