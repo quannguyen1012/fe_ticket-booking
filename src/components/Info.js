@@ -10,14 +10,21 @@ const { Header} = Layout;
 
 
 
-const handleSubmit = () => {
-    window.location.href = "/invoice";
-};
-const goBack = () =>{
-    window.location.href = "/flight";
-}
+
 
 function Info() {
+
+    
+
+
+    const handleSubmit = () => {
+        window.location.href = "/invoice";
+    };
+    const goBack = () =>{
+        window.location.href = "/flight";
+    }
+
+
     return(
         <div style={{backgroundImage:`url(${backgoundinfo})`}}>
             <Layout >
@@ -75,8 +82,6 @@ function Info() {
                                     <Select.Option>10</Select.Option>
                             </Select>
                         </Form.Item>
-
-
                     </div>
                     <p style={{textAlign:'center'}}>--------------------------------------------------------------------------------------------------</p>
                     <h2 style={{textAlign:'center'}}>Tổng: 3.500.000 VND</h2>

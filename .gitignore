@@ -12,8 +12,9 @@
 /build
 
 # misc
-package-lock.json
-package.json
+.gitignore
+package-lock
+package
 .DS_Store
 .env.local
 .env.development.local

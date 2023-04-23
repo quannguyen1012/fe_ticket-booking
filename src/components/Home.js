@@ -9,7 +9,6 @@ import background from "../img/backgound.jpg";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import Flight from "./Flight";
 
 
 const { Header } = Layout;
@@ -18,15 +17,12 @@ const { Header } = Layout;
 
 function SLayout(){
     const [startDate, setStartDate] = useState(new Date());
-    const date = `${startDate.getDate()}/` + `${startDate.getMonth()+1}/`+`${startDate.getFullYear()}`;
+    const date = `${startDate.getDate()}/` + `0${startDate.getMonth()+1}/`+`${startDate.getFullYear()}`;
     console.log(date);
 
     const [ticket, setTicket] = useState({
         departurePoint:'',
         destination: '',
-        seats: '',
-        flightTime:'',
-        price:''
     });
 
     console.log(ticket);
@@ -55,15 +51,13 @@ function SLayout(){
     }
 
     const handleSubmit = () => {
-        axios.post(`http://localhost:8080/api/v1/flights?date=${date}`, ticket)
+        axios.post(`http://localhost:8080/api/v1/flights/search?date=${date}`, ticket)
         .then(res => {
-            Flight.loadFlight(res.data);
             window.location.href = "/flight";
         })
         .catch(err => {
         throw err;
         });
-
     };
 
     return (

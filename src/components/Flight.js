@@ -3,8 +3,12 @@ import background from "../img/backgound.jpg";
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import logo from "../img/ve-may-bay-gia-re.jpg";
+import backgoundTicket from "../img/backgroupticket.jpeg";
+
 import Navbar from "./NavBar";
-import { Breadcrumb, Layout} from 'antd';
+import { Breadcrumb, Form, Layout, Button} from 'antd';
+import axios from "axios";
+
 const { Header} = Layout;
 
 
@@ -13,21 +17,51 @@ function Flight() {
  
   const [flights , setFlights] = useState([]);
 
-  const loadFlight = async (value) => {
-    setFlights(value);
+  const [ticket, setTicket] = useState({
+    flightTime:'',
+    price: 0
+  });
+
+
+
+  const loadFlight = async () => {
+    const result = await axios.get(`http://localhost:8080/api/v1/flights`);
+    setFlights(result.data);
   }
 
   useEffect(() => {
-    loadFlight();
-}, []);
-  console.log(flights);
+    if(flights.length == 0){
+      loadFlight();
+    }
+  }, [flights]);
 
-  const handleSubmit = () => {
-    window.location.href = "/info";
+  useEffect(() => {
+  }, [ticket]);
+
+  const add = (startTime, endTime, price) => {
+    const flightTime = `${startTime}-${endTime}`;
+    setTicket((ticket) => ({
+      ...ticket,
+      flightTime: flightTime,
+      price: price,
+    }));
+    
+    // handleSubmit();
   };
 
+  const handleSubmit = () => {
+    axios.post(`http://localhost:8080/api/v1/airplane-seats/add`, ticket)
+        .then(res => {
+          window.location.href = "/info";
+        })
+        .catch(err => {
+        throw err;
+        });
+  };
+  console.log(ticket);
+
   return (
-      <div style={{ background: '#CFE6E6', backgroundImage:`url(${background})`}}>
+      <div style={{ backgroundImage:`url(${background})`,  height:"1080px" }}>
         <Layout >
           <Layout>
           <Header className="header">
@@ -45,137 +79,25 @@ function Flight() {
                 <h1 class="title text-center" style={{background:'#00FFFF'}}> Danh Sách Chuyến Bay</h1>
                 <div className='row'>
 
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary mb-4 bg-secondary text-white rounded-pill">
+                {flights.map((flight) => ( 
+                  <div class="col-sm-4" >
+                    <div class="product-image-wrapper border border-primary mb-4  text-black rounded-5" style={{ backgroundImage:`url(${backgoundTicket})` }}>
                       <div class="single-products">
-                          
-                          <div class="productinfo text-center">
-                            <a href="#">
-                            <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                            </a>
-                            <div>
-                                <h2 className='d-sm-inline-block'>10:05-12:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                            </div>
-                            <a  onClick={handleSubmit} class="btn btn-default add-to-cart"><b>Đặt vé</b></a>
-                          </div>
-                          
+                          <Form>
+                              <div class="productinfo text-center" >
+                                <a href="#">
+                                <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
+                                </a>
+                                <div>
+                                    <h2 className='d-sm-inline-block'>{flight.startTime}-{flight.endTime}</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>${flight.price}</h2> 
+                                </div>
+                                <Button  onClick={() => add(flight.startTime, flight.endTime, flight.price)} class="btn btn-default"><b>Đặt vé</b></Button >
+                              </div>
+                          </Form>
                       </div>
                     </div>
                   </div>
-
-
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>12:05-14:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products ">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>14:00-16:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary mb-4 bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>16:05-18:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4"> 
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>18:05-20:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>20:05-22:00</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>12:05</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} className='mt-1'/>
-                          <div>
-                              <h2 className='d-sm-inline-block'>12:05</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="product-image-wrapper border border-primary mb-4 bg-secondary text-white rounded-pill">
-                      <div class="single-products">
-                          <div class="productinfo text-center">
-                          <img className='mr-2' style={{ marginBottom: 20, borderRadius:20}} src={logo} alt="" width={200} />
-                          <div>
-                              <h2 className='d-sm-inline-block'>12:05</h2>&emsp;&emsp;&emsp; <h2 className='d-sm-inline-block'>100$</h2> 
-                          </div>
-                          <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i><b>Đặt vé</b></a>
-
-                          </div>
-                      </div>
-                    </div>
-                  </div>
+                ))}
                 </div>
             </section>
           </div>
