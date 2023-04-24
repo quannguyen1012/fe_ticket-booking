@@ -18,8 +18,9 @@ function Flight() {
   const [flights , setFlights] = useState([]);
 
   const [ticket, setTicket] = useState({
-    flightTime:'',
-    price: 0
+    startTime:'',
+    endTime:'',
+    price: ''
   });
 
 
@@ -38,19 +39,24 @@ function Flight() {
   useEffect(() => {
   }, [ticket]);
 
-  const add = (startTime, endTime, price) => {
-    const flightTime = `${startTime}-${endTime}`;
-    setTicket((ticket) => ({
+  const add =  (startTime, endTime, price) => {
+     setTicket({
       ...ticket,
-      flightTime: flightTime,
+      startTime: startTime,
+      endTime: endTime,
       price: price,
-    }));
-    
-    // handleSubmit();
+    });
+    if(ticket.startTime != ""){
+      handleSubmit();
+
+    }
   };
 
   const handleSubmit = () => {
-    axios.post(`http://localhost:8080/api/v1/airplane-seats/add`, ticket)
+
+
+
+    axios.post(`http://localhost:8080/api/v1/flights/add-flight`, ticket)
         .then(res => {
           window.location.href = "/info";
         })

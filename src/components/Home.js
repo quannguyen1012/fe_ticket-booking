@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Select, Tag } from 'antd';
+import { Button, Form,  Select, Modal } from 'antd';
 import { Outlet } from "react-router-dom";
 import { Breadcrumb, Layout} from 'antd';
 import Navbar from "./NavBar";
@@ -10,12 +10,29 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 
-
 const { Header } = Layout;
 
 
 
 function SLayout(){
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showMessage = () => {
+        setIsModalOpen(true);
+    };
+  
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+  
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    if (ticket.departurePoint == ticket.destination && ticket.departurePoint != "" && ticket.destination != "") {
+        showMessage();
+    }
+
     const [startDate, setStartDate] = useState(new Date());
     const date = `${startDate.getDate()}/` + `0${startDate.getMonth()+1}/`+`${startDate.getFullYear()}`;
     console.log(date);
@@ -24,6 +41,8 @@ function SLayout(){
         departurePoint:'',
         destination: '',
     });
+
+    
 
     console.log(ticket);
 
@@ -111,10 +130,14 @@ function SLayout(){
                     <div style={{textAlign:'center', paddingBottom:10}}>
                         <Button style={{width:150,backgroundColor: "#CCFF00", color: "black"}} onClick={handleSubmit} type="primary" ><b>Tìm chuyến bay</b></Button>        
                     </div>
+                    <Modal title="Thông báo" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                        <p>Diểm khởi hành và Diểm dến không được trùng</p>
+                    </Modal>
                 </Form>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
             </div>
+            
         </div>
     );
 };
